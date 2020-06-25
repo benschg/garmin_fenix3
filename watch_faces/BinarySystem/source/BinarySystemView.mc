@@ -27,15 +27,6 @@ class BinarySystemView extends Ui.WatchFace {
 
         var layoutMode = App.getApp().getProperty("LayoutType");
         {
-        	if (dc.getHeight() >= 260)
-        	{
-        		Sys.println("Fenix 6 detected");
-        		setLayout(Rez.Layouts.Fenix6Layout(dc));
-        	}
-            // this is a round watchface... HACK
-            else if (dc.getHeight() > 200)
-            {
-            	Sys.println("Fenix 3 detected");
             	if (layoutMode == 0)
             	{
 		            setLayout(Rez.Layouts.GeekModeLayout(dc));
@@ -61,13 +52,6 @@ class BinarySystemView extends Ui.WatchFace {
                 	Sys.println("!!Could not find correct value for LayoutType, fallback to default!!");
 		            setLayout(Rez.Layouts.NormalModeLayout2(dc));                     
                 }
-            }
-            
-            else
-            {
-                // ForeRunner 735XT
-                setLayout(Rez.Layouts.NormalModeLayoutFR735(dc));
-            }
         }
     }
 
