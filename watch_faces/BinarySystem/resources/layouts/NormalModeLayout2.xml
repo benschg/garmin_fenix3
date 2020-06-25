@@ -4,12 +4,12 @@
             <param name="showBatteryPercentage">true</param>
 			<param name="showBatteryBar">true</param>
             <param name="batteryBarHorizontal">true</param>
-            <param name="batteryBarSize">100</param>
+            <param name="batteryBarSize">.5</param>
             <param name="batteryBarThickness">2</param>
-            <param name="batteryBarLocX">109</param>
-            <param name="batteryBarLocY">16</param>
-            <param name="batteryPercentageLocX">50</param>
-            <param name="batteryPercentageLocY">0</param>
+            <param name="batteryBarLocX">.5</param>
+            <param name="batteryBarLocY">.1</param>
+            <param name="batteryPercentageLocX">.05</param>
+            <param name="batteryPercentageLocY">.05</param>
 		 </drawable>				 
 		  
 		 <drawable id="timeView" class="TimeView">

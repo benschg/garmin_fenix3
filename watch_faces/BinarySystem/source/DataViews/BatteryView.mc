@@ -17,13 +17,13 @@ class BatteryView extends Ui.Drawable
     var timeInterval = 0;
     var remainingBattery;
 
-    var batteryBarSize = 50;
+    var batteryBarSize = .5;
     var batteryBarThickness = 2;
-    var batteryBarLocX= 109;
-    var batteryBarLocY = 50;
+    var batteryBarLocX= .5;
+    var batteryBarLocY = .2;
 
-    var batteryPercentageLocX = 109;
-    var batteryPercentageLocY =10;
+    var batteryPercentageLocX = .5;
+    var batteryPercentageLocY = .5;
 
     var fg_color = Gfx.COLOR_WHITE;
     var bg_transp = Gfx.COLOR_TRANSPARENT;
@@ -187,7 +187,7 @@ function draw(dc)
             }
             var font = Gfx.FONT_TINY;
             dc.setColor(dot_color, bg_transp);
-            dc.drawText(batteryBarLocX + batteryPercentageLocX , batteryBarLocY +batteryPercentageLocY, font, batteryPercentageStr, Gfx.TEXT_JUSTIFY_CENTER);
+            dc.drawText((batteryBarLocX + batteryPercentageLocX) * dc.getWidth(), (batteryBarLocY +batteryPercentageLocY) * dc.getHeight(), font, batteryPercentageStr, Gfx.TEXT_JUSTIFY_CENTER);
     }
 
 
