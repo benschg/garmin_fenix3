@@ -38,7 +38,7 @@ class TimeView extends Ui.Drawable
         {
             var timeStr = Lang.format("$1$:$2$", [time.hour, time.min.format("%02d")]);
             dc.setColor(fg_color, bg_transp);
-            dc.drawText(locX, locY, Gfx.FONT_LARGE, timeStr, Gfx.TEXT_JUSTIFY_CENTER);
+            dc.drawText(locX * dc.getWidth(), locY * dc.getHeight(), Gfx.FONT_LARGE, timeStr, Gfx.TEXT_JUSTIFY_CENTER);
         }
         //===============================
         //!draw date
@@ -47,7 +47,7 @@ class TimeView extends Ui.Drawable
         {
             var dateStr = Lang.format("$1$ $2$ $3$", [time.day_of_week, time.month, time.day]);
             dc.setColor(dot_color, bg_transp);
-            dc.drawText(locX, locY + (showTime ? 30 : 0), Gfx.FONT_TINY, dateStr, Gfx.TEXT_JUSTIFY_CENTER);
+            dc.drawText(locX * dc.getWidth(), (locY + (showTime ? 30 : 0)) * dc.getHeight(), Gfx.FONT_TINY, dateStr, Gfx.TEXT_JUSTIFY_CENTER);
         }
     }
 }
