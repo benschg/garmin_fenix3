@@ -34,20 +34,21 @@ class TimeView extends Ui.Drawable
         var dot_color = App.getApp().getProperty("ForegroundColor");
 
 
+        var centerX = locX * dc.getWidth();
+        var centerY = locY * dc.getHeight();
+        var lineHeight = dc.getHeight() / 7;
+
         if (showTime)
         {
             var timeStr = Lang.format("$1$:$2$", [time.hour, time.min.format("%02d")]);
             dc.setColor(fg_color, bg_transp);
-            dc.drawText(locX * dc.getWidth(), locY * dc.getHeight(), Gfx.FONT_LARGE, timeStr, Gfx.TEXT_JUSTIFY_CENTER);
+            dc.drawText(centerX, centerY - (showDate ? lineHeight : 0), Gfx.FONT_LARGE, timeStr, Gfx.TEXT_JUSTIFY_CENTER);
         }
-        //===============================
-        //!draw date
-        //===============================
         if (showDate)
         {
             var dateStr = Lang.format("$1$ $2$ $3$", [time.day_of_week, time.month, time.day]);
             dc.setColor(dot_color, bg_transp);
-            dc.drawText(locX * dc.getWidth(), (locY + (showTime ? 30 : 0)) * dc.getHeight(), Gfx.FONT_TINY, dateStr, Gfx.TEXT_JUSTIFY_CENTER);
+            dc.drawText(centerX, centerY, Gfx.FONT_TINY, dateStr, Gfx.TEXT_JUSTIFY_CENTER);
         }
     }
 }

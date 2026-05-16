@@ -52,7 +52,7 @@ class SunView extends Ui.Drawable
 				else //when no location is present
 				{
 				    //check if there is stored location data and load it if available
-				    var hasStoredLocationData = Application.getApp().getProperty("hasStoredLocationData");
+				    hasStoredLocationData = Application.getApp().getProperty("hasStoredLocationData");
 				    if (hasStoredLocationData==true)
 				    {   // then get the stored location
 				        latitude = Application.getApp().getProperty("lastStoredLatitude");

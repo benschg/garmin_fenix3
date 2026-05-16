@@ -43,7 +43,8 @@ class BinaryView extends Ui.Drawable
 
 	function drawBinaryArray(dc, rows, column, count, locationCallback)
 	{
-		var binaryRadius = App.getApp().getProperty("BinaryRadius");
+		var binaryRadius = App.Storage.getValue("BinaryRadius");
+		if (binaryRadius == null) { binaryRadius = 40; }
 		var color_rgb = App.getApp().getProperty("ForegroundColor");
         var color_bg = Gfx.COLOR_BLACK;
 	    var color_fg = Gfx.COLOR_WHITE;
