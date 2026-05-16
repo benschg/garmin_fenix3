@@ -9,14 +9,14 @@
             <param name="batteryBarLocX">.5</param>
             <param name="batteryBarLocY">.1</param>
             <param name="batteryPercentageLocX">.05</param>
-            <param name="batteryPercentageLocY">.05</param>
+            <param name="batteryPercentageLocY">.02</param>
 		 </drawable>
 
 		 <drawable id="timeView" class="TimeView">
 		 	<param name="showTime">true</param>
 		 	<param name="showDate">true</param>
 			<param name="x">.5</param>
-			<param name="y">.5</param>
+			<param name="y">.54</param>
 		 </drawable>
 
 		 <drawable id="binaryView" class="BinaryView">
@@ -29,33 +29,32 @@
 
 		 <drawable id="activityView" class="ActivityView">
 			<param name="x">225</param>
-			<param name="y">375</param>
+			<param name="y">355</param>
             <param name="stepsXOffset">-42</param>
-            <param name="stepsYOffset">-54</param>
+            <param name="stepsYOffset">-48</param>
             <param name="showDistance">true</param>
             <param name="distanceXOffset">117</param>
-            <param name="distanceYOffset">-54</param>
+            <param name="distanceYOffset">-48</param>
          </drawable>
 
+         <drawable id="notificationView" class="NotificationView">
+            <param name="x">62</param>
+            <param name="y">75</param>
+         </drawable>
          <drawable id="alarmView" class="AlarmView">
-            <param name="x">83</param>
-            <param name="y">42</param>
+            <param name="x">110</param>
+            <param name="y">75</param>
          </drawable>
 		 <drawable id="bluetoothView" class="BluetoothView">
-			<param name="x">125</param>
-			<param name="y">42</param>
+			<param name="x">138</param>
+			<param name="y">55</param>
 		 </drawable>
         <drawable id="sunView" class="SunView">
             <param name="showSun">true</param>
-            <param name="iconX">166</param>
-            <param name="iconY">42</param>
+            <param name="iconX">265</param>
+            <param name="iconY">90</param>
             <param name="textX">227</param>
-            <param name="textY">142</param>
+            <param name="textY">95</param>
          </drawable>
-
-		 <drawable id="notificationView" class="NotificationView">
-			<param name="x">87</param>
-			<param name="y">87</param>
-		 </drawable>
 	</layout>
 </resources>
