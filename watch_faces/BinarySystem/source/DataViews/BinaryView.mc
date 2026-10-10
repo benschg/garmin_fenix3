@@ -3,91 +3,92 @@ using Toybox.Graphics as Gfx;
 using Toybox.Time.Gregorian as Gregorian;
 using Toybox.Time as Time;
 using Toybox.WatchUi as Ui;
-using Toybox.System as Sys;
+
+const BINARY_ROWS = 6;
+const BINARY_RADIUS = 14;
 
 class BinaryView extends Ui.Drawable
 {
-	var typeMethod = null;
 	var showSeconds = true;
+	var color;
+	var binaryLocation;
+	var typeMethod = null;
+	// dot positions per column (0 = seconds, 1 = minutes, 2 = hours), computed on first draw
+	var positions = null;
+
 	function initialize(params)
 	{
 		Drawable.initialize(params);
 
-		locX = params.get(:x);
-		locY = params.get(:y);
-		showSeconds = params.get(:showSeconds);
 		binaryLocation = new BinaryLocation();
-		binaryLocation.locX = locX;
-		binaryLocation.locY = locY;
+		binaryLocation.locX = params.get(:x);
+		binaryLocation.locY = params.get(:y);
 		binaryLocation.borderDistance = params.get(:borderDistance);
 
 		var type = params.get(:type);
-		Sys.println("binary type: " + type);
-		if (type.equals(Circular))
+		if (type == Vertical)
 		{
-			Sys.println("Using Circular location");
-			typeMethod = binaryLocation.method(:circularLocation);
-		}
-		else if (type.equals(Vertical))
-		{
-			Sys.println("Using Vertical locations");
 			typeMethod = binaryLocation.method(:verticalLocation);
 		}
-			else if (type.equals(Horizontal))
+		else if (type == Horizontal)
 		{
-			Sys.println("Using Vertical locations");
 			typeMethod = binaryLocation.method(:horizontalLocation);
 		}
-	}
-	var binaryLocation;
-
-	function drawBinaryArray(dc, rows, column, count, locationCallback)
-	{
-		var binaryRadius = App.Storage.getValue("BinaryRadius");
-		if (binaryRadius == null) { binaryRadius = 40; }
-		var color_rgb = App.getApp().getProperty("ForegroundColor");
-        var color_bg = Gfx.COLOR_BLACK;
-	    var color_fg = Gfx.COLOR_WHITE;
-
-		var width = dc.getWidth();
-        var height = dc.getHeight();
-
-		for(var iL = 0; iL < rows; iL++)
+		else
 		{
-			var value = 1 << iL;
+			typeMethod = binaryLocation.method(:circularLocation);
+		}
 
-			// using location through callback
-			var location = locationCallback.invoke(dc, column, iL);
-			var xLocation = location[0];
-			var yLocation = location[1];
+		showSeconds = params.get(:showSeconds) == true && App.getApp().getProperty("ShowSeconds") == true;
+		color = App.getApp().getProperty("ForegroundColor");
+	}
 
-			dc.setColor(color_fg, color_bg);
-            dc.drawCircle(xLocation, yLocation, binaryRadius);
-
-			if (count & value == value)
+	function computePositions(dc)
+	{
+		positions = new [3];
+		for (var column = 0; column < 3; column++)
+		{
+			positions[column] = new [BINARY_ROWS];
+			for (var row = 0; row < BINARY_ROWS; row++)
 			{
-				dc.setColor(color_rgb, color_bg);
-    	        dc.fillCircle(xLocation, yLocation, binaryRadius - 1);
+				positions[column][row] = typeMethod.invoke(dc, column, row);
+			}
+		}
+	}
 
+	function drawBinaryArray(dc, column, count)
+	{
+		var column_positions = positions[column];
+		for (var row = 0; row < BINARY_ROWS; row++)
+		{
+			var x = column_positions[row][0];
+			var y = column_positions[row][1];
+
+			dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+			dc.drawCircle(x, y, BINARY_RADIUS);
+
+			if ((count & (1 << row)) != 0)
+			{
+				dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+				dc.fillCircle(x, y, BINARY_RADIUS - 1);
 			}
 		}
 	}
 
 	function draw(dc)
 	{
-		var now = Time.now();
-        var time = Gregorian.info(now, Time.FORMAT_LONG);
-
-		var isLowPower = App.getApp().getProperty("IsLowPowerMode");
-		var appShowSeconds = App.getApp().getProperty("ShowSeconds");
-		if ((isLowPower == null || isLowPower == false)
-			&& appShowSeconds == true
-			&& showSeconds == true)
+		if (positions == null)
 		{
-			drawBinaryArray(dc, 6, 0, time.sec, typeMethod);
+			computePositions(dc);
 		}
-		drawBinaryArray(dc, 6, 1, time.min, typeMethod);
-		drawBinaryArray(dc, 6, 2, time.hour, typeMethod);
-	}
 
- }
+		var time = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+
+		if (showSeconds && !gIsSleeping)
+		{
+			drawBinaryArray(dc, 0, time.sec);
+		}
+		drawBinaryArray(dc, 1, time.min);
+		drawBinaryArray(dc, 2, time.hour);
+	}
+}

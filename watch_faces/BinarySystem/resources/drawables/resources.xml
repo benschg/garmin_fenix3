@@ -11,20 +11,7 @@
            <color>CCCCCC</color>
         </palette>
     </bitmap>
-    
-    <bitmap id="flight_icon" filename="../icons/flight.png" dithering="none">  
-        <palette disableTransparency="false">
-           <color>CCCCCC</color>
-        </palette>
-    </bitmap>
-    
-    <bitmap id="lock_icon" filename="../icons/lock.png" dithering="none">  
-        <palette disableTransparency="false">
-           <color>CCCCCC</color>
-        </palette>
-    </bitmap>
 
-    
     <bitmap id="alarm_icon" filename="../icons/alarm.png" dithering="none">
         <palette disableTransparency="false">
            <color>CCCCCC</color>

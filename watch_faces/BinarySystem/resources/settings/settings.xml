@@ -25,10 +25,6 @@
     <setting propertyKey="@Properties.showBatteryBar" 
                     title="@Strings.showBatteryBarTitle">
         <settingConfig type="boolean" />
-    </setting>
-    <setting propertyKey="@Properties.RemainingBatteryEstimate"
-        title="@Strings.RemainingBatteryEstimateTitle">
-        <settingConfig type="boolean" />
     </setting>      
     
     <!-- TIME -->   

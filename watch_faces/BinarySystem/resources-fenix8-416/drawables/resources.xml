@@ -1,0 +1,14 @@
+<resources>
+    <!-- Larger status icons for the 416px screen (18px -> 26px) -->
+    <bitmap id="bluetooth_icon" filename="../../resources/icons/bluetooth.png" dithering="none" scaleX="145%" scaleY="145%" scaleRelativeTo="image">
+        <palette disableTransparency="false">
+           <color>CCCCCC</color>
+        </palette>
+    </bitmap>
+
+    <bitmap id="alarm_icon" filename="../../resources/icons/alarm.png" dithering="none" scaleX="145%" scaleY="145%" scaleRelativeTo="image">
+        <palette disableTransparency="false">
+           <color>CCCCCC</color>
+        </palette>
+    </bitmap>
+</resources>

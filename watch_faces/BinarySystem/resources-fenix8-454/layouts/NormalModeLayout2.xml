@@ -37,17 +37,23 @@
             <param name="distanceYOffset">-48</param>
          </drawable>
 
+         <drawable id="sensorView" class="SensorView">
+            <param name="x">227</param>
+            <param name="y">351</param>
+            <param name="spacing">85</param>
+         </drawable>
+
          <drawable id="notificationView" class="NotificationView">
             <param name="x">62</param>
             <param name="y">75</param>
          </drawable>
          <drawable id="alarmView" class="AlarmView">
-            <param name="x">110</param>
-            <param name="y">75</param>
+            <param name="x">105</param>
+            <param name="y">70</param>
          </drawable>
 		 <drawable id="bluetoothView" class="BluetoothView">
-			<param name="x">138</param>
-			<param name="y">55</param>
+			<param name="x">133</param>
+			<param name="y">50</param>
 		 </drawable>
         <drawable id="sunView" class="SunView">
             <param name="showSun">true</param>

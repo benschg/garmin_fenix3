@@ -13,7 +13,6 @@
     
     <string id="showBatteryPercentageTitle">Battery Percentage</string> 
     <string id="showBatteryBarTitle">Battery Bar</string>
-    <string id="RemainingBatteryEstimateTitle">Remaining Battery (Experimental)</string>   
     
     <!-- <string id="showTimeTitle">Show Time</string>
     <string id="showDateTitle">Show Date</string> -->

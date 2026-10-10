@@ -35,12 +35,12 @@
          </drawable>
 
 		 <drawable id="bluetoothView" class="BluetoothView">
-			<param name="x">31</param>
-			<param name="y">167</param>
+			<param name="x">26</param>
+			<param name="y">162</param>
 		 </drawable>
          <drawable id="alarmView" class="AlarmView">
-            <param name="x">62</param>
-            <param name="y">167</param>
+            <param name="x">57</param>
+            <param name="y">162</param>
          </drawable>
         <drawable id="sunView" class="SunView">
             <param name="showSun">true</param>
