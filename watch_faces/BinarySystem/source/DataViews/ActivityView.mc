@@ -11,7 +11,7 @@ class ActivityView extends Ui.Drawable
     var showDistance = true;
     var distanceXOffset = 0;
     var distanceYOffset = 0;
-    var color;
+    var justify = Gfx.TEXT_JUSTIFY_RIGHT;
 
     function initialize(params)
     {
@@ -23,8 +23,12 @@ class ActivityView extends Ui.Drawable
         distanceXOffset = params.get(:distanceXOffset);
         distanceYOffset = params.get(:distanceYOffset);
 
+        if (params.get(:centered) == true)
+        {
+            justify = Gfx.TEXT_JUSTIFY_CENTER;
+        }
+
         showDistance = App.getApp().getProperty("showDistance");
-        color = App.getApp().getProperty("ForegroundColor");
     }
 
     function draw(dc)
@@ -39,14 +43,14 @@ class ActivityView extends Ui.Drawable
         var steps = activityInfo.steps == null ? 0 : activityInfo.steps;
 
         // steps
-        dc.setColor(color, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(locX + stepsXOffset, locY + stepsYOffset, Gfx.FONT_TINY, steps.toString(), Gfx.TEXT_JUSTIFY_RIGHT);
+        dc.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(locX + stepsXOffset, locY + stepsYOffset, Gfx.FONT_TINY, steps.toString(), justify);
 
         // distance
         if (showDistance && activityInfo.distance != null)
         {
             dc.drawText(locX + distanceXOffset, locY + distanceYOffset, Gfx.FONT_TINY,
-                        formatDistance(activityInfo.distance, deviceSettings.distanceUnits), Gfx.TEXT_JUSTIFY_RIGHT);
+                        formatDistance(activityInfo.distance, deviceSettings.distanceUnits), justify);
         }
     }
 

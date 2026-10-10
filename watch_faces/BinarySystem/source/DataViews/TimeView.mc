@@ -9,6 +9,7 @@ class TimeView extends Ui.Drawable
 {
     var showTime = true;
     var showDate = true;
+    var timeFont = Gfx.FONT_LARGE;
     var color;
 
     function initialize(params)
@@ -19,6 +20,10 @@ class TimeView extends Ui.Drawable
         locY = params.get(:y);
         showTime = params.get(:showTime);
         showDate = params.get(:showDate);
+        if (params.get(:timeFont) != null)
+        {
+            timeFont = params.get(:timeFont);
+        }
         color = App.getApp().getProperty("ForegroundColor");
     }
 
@@ -32,7 +37,7 @@ class TimeView extends Ui.Drawable
         {
             var lineHeight = showDate ? dc.getHeight() / 7 : 0;
             dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-            dc.drawText(centerX, centerY - lineHeight, Gfx.FONT_LARGE,
+            dc.drawText(centerX, centerY - lineHeight, timeFont,
                         Lang.format("$1$:$2$", [time.hour, time.min.format("%02d")]), Gfx.TEXT_JUSTIFY_CENTER);
         }
         if (showDate)

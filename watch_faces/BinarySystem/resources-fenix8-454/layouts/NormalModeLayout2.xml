@@ -1,66 +1,80 @@
 <resources>
+	<!-- Fenix 8 47mm (454x454): one centered column inside the binary ring.
+	     Binary dots: hours left, minutes right, seconds bottom. -->
 	<layout id="NormalModeLayout2">
-		<drawable id="batteryView" class="BatteryView">
-            <param name="showBatteryPercentage">true</param>
-			<param name="showBatteryBar">true</param>
-            <param name="batteryBarHorizontal">true</param>
-            <param name="batteryBarSize">.5</param>
-            <param name="batteryBarThickness">.005</param>
-            <param name="batteryBarLocX">.5</param>
-            <param name="batteryBarLocY">.1</param>
-            <param name="batteryPercentageLocX">.05</param>
-            <param name="batteryPercentageLocY">.02</param>
-		 </drawable>
-
-		 <drawable id="timeView" class="TimeView">
-		 	<param name="showTime">true</param>
-		 	<param name="showDate">true</param>
-			<param name="x">.5</param>
-			<param name="y">.54</param>
-		 </drawable>
-
-		 <drawable id="binaryView" class="BinaryView">
+		<drawable id="binaryView" class="BinaryView">
 			<param name="x">125</param>
 			<param name="y">167</param>
 			<param name="borderDistance">37</param>
 			<param name="type">Circular</param>
 			<param name="showSeconds">true</param>
-		 </drawable>
+		</drawable>
 
-		 <drawable id="activityView" class="ActivityView">
-			<param name="x">225</param>
-			<param name="y">355</param>
-            <param name="stepsXOffset">-42</param>
-            <param name="stepsYOffset">-48</param>
-            <param name="showDistance">true</param>
-            <param name="distanceXOffset">117</param>
-            <param name="distanceYOffset">-48</param>
-         </drawable>
+		<!-- status icons -->
+		<drawable id="alarmView" class="AlarmView">
+			<param name="x">167</param>
+			<param name="y">32</param>
+		</drawable>
+		<drawable id="bluetoothView" class="BluetoothView">
+			<param name="x">207</param>
+			<param name="y">32</param>
+		</drawable>
+		<drawable id="notificationView" class="NotificationView">
+			<param name="x">247</param>
+			<param name="y">37</param>
+		</drawable>
 
-         <drawable id="sensorView" class="SensorView">
-            <param name="x">227</param>
-            <param name="y">351</param>
-            <param name="spacing">85</param>
-         </drawable>
+		<!-- battery -->
+		<drawable id="batteryView" class="BatteryView">
+			<param name="batteryBarHorizontal">true</param>
+			<param name="batteryBarSize">.3</param>
+			<param name="batteryBarThickness">.006</param>
+			<param name="batteryBarLocX">.5</param>
+			<param name="batteryBarLocY">.155</param>
+			<param name="batteryPercentageLocX">0</param>
+			<param name="batteryPercentageLocY">.008</param>
+		</drawable>
 
-         <drawable id="notificationView" class="NotificationView">
-            <param name="x">62</param>
-            <param name="y">75</param>
-         </drawable>
-         <drawable id="alarmView" class="AlarmView">
-            <param name="x">105</param>
-            <param name="y">70</param>
-         </drawable>
-		 <drawable id="bluetoothView" class="BluetoothView">
-			<param name="x">133</param>
-			<param name="y">50</param>
-		 </drawable>
-        <drawable id="sunView" class="SunView">
-            <param name="showSun">true</param>
-            <param name="iconX">265</param>
-            <param name="iconY">90</param>
-            <param name="textX">227</param>
-            <param name="textY">95</param>
-         </drawable>
+		<!-- sunrise / sunset -->
+		<drawable id="sunView" class="SunView">
+			<param name="textX">227</param>
+			<param name="textY">106</param>
+			<param name="iconX">218</param>
+			<param name="iconY">112</param>
+		</drawable>
+
+		<!-- time and date -->
+		<drawable id="timeView" class="TimeView">
+			<param name="showTime">true</param>
+			<param name="showDate">false</param>
+			<param name="timeFont">Graphics.FONT_NUMBER_MEDIUM</param>
+			<param name="x">.5</param>
+			<param name="y">.275</param>
+		</drawable>
+		<drawable id="dateView" class="TimeView">
+			<param name="showTime">false</param>
+			<param name="showDate">true</param>
+			<param name="x">.5</param>
+			<param name="y">.53</param>
+		</drawable>
+
+		<!-- steps | distance -->
+		<drawable id="activityView" class="ActivityView">
+			<param name="x">227</param>
+			<param name="y">284</param>
+			<param name="centered">true</param>
+			<param name="stepsXOffset">-80</param>
+			<param name="stepsYOffset">0</param>
+			<param name="showDistance">true</param>
+			<param name="distanceXOffset">80</param>
+			<param name="distanceYOffset">0</param>
+		</drawable>
+
+		<!-- floors | temperature | heart rate -->
+		<drawable id="sensorView" class="SensorView">
+			<param name="x">227</param>
+			<param name="y">324</param>
+			<param name="spacing">80</param>
+		</drawable>
 	</layout>
 </resources>

@@ -85,7 +85,7 @@ class SunView extends Ui.Drawable
             updateLocation();
         }
 
-        dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
 
         if (latitude == null)
         {

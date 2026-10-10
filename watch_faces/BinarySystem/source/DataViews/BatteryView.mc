@@ -48,7 +48,7 @@ class BatteryView extends Ui.Drawable
 
         if (showBatteryBar)
         {
-            dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+            dc.setColor(Gfx.COLOR_DK_GRAY, Gfx.COLOR_TRANSPARENT);
             drawBatteryBar(dc, 100);
             dc.setColor(color, Gfx.COLOR_TRANSPARENT);
             drawBatteryBar(dc, battery);
@@ -57,7 +57,7 @@ class BatteryView extends Ui.Drawable
         {
             var width = dc.getWidth();
             var height = dc.getHeight();
-            dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+            dc.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
             dc.drawText(toPixels(batteryBarLocX, width) + toPixels(batteryPercentageLocX, width),
                         toPixels(batteryBarLocY, height) + toPixels(batteryPercentageLocY, height),
                         Gfx.FONT_TINY, Math.round(battery).format("%d") + "%", Gfx.TEXT_JUSTIFY_CENTER);

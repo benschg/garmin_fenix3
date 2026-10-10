@@ -101,24 +101,23 @@ class SensorView extends Ui.Drawable
         var fontHeight = dc.getFontHeight(Gfx.FONT_TINY);
         var y = locY + fontHeight / 2;
 
-        dc.setColor(color, Gfx.COLOR_TRANSPARENT);
         var justify = Gfx.TEXT_JUSTIFY_CENTER | Gfx.TEXT_JUSTIFY_VCENTER;
-
-        // floors: up arrow + count
         var floors = getFloors();
-        var floorsX = locX - spacing;
-        var arrowX = floorsX - dc.getTextWidthInPixels(floors, Gfx.FONT_TINY) / 2 - 8;
-        dc.fillPolygon([[arrowX, y - 6], [arrowX - 6, y + 4], [arrowX + 6, y + 4]]);
-        dc.drawText(floorsX + 4, y, Gfx.FONT_TINY, floors, justify);
-
-        dc.drawText(locX, y, Gfx.FONT_TINY, temperatureText, justify);
-
-        // heart rate: small heart + bpm
         var heartRate = getHeartRate();
+
+        // icons in the accent color
+        dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+        var arrowX = locX - spacing - dc.getTextWidthInPixels(floors, Gfx.FONT_TINY) / 2 - 8;
+        dc.fillPolygon([[arrowX, y - 6], [arrowX - 6, y + 4], [arrowX + 6, y + 4]]);
         var heartX = locX + spacing - dc.getTextWidthInPixels(heartRate, Gfx.FONT_TINY) / 2 - 8;
         dc.fillCircle(heartX - 3, y - 3, 4);
         dc.fillCircle(heartX + 3, y - 3, 4);
         dc.fillPolygon([[heartX - 7, y - 2], [heartX + 7, y - 2], [heartX, y + 6]]);
+
+        // values in light gray
+        dc.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(locX - spacing + 4, y, Gfx.FONT_TINY, floors, justify);
+        dc.drawText(locX, y, Gfx.FONT_TINY, temperatureText, justify);
         dc.drawText(locX + spacing + 4, y, Gfx.FONT_TINY, heartRate, justify);
     }
 }
