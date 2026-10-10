@@ -1,7 +1,24 @@
 <resources>
 	<!-- Fenix 8 47mm (454x454): one centered column inside the binary ring.
-	     Binary dots: hours left, minutes right, seconds bottom. -->
+	     Binary dots: hours left, minutes right, seconds bottom.
+	     Panels come first so they are drawn behind their content. -->
 	<layout id="NormalModeLayout2">
+		<!-- shaded areas -->
+		<drawable id="sunPanel" class="PanelView">
+			<param name="x">102</param>
+			<param name="y">101</param>
+			<param name="w">250</param>
+			<param name="h">40</param>
+			<param name="radius">20</param>
+		</drawable>
+		<drawable id="activityPanel" class="PanelView">
+			<param name="x">70</param>
+			<param name="y">282</param>
+			<param name="w">314</param>
+			<param name="h">80</param>
+			<param name="radius">20</param>
+		</drawable>
+
 		<drawable id="binaryView" class="BinaryView">
 			<param name="x">125</param>
 			<param name="y">167</param>
@@ -10,37 +27,32 @@
 			<param name="showSeconds">true</param>
 		</drawable>
 
-		<!-- status icons -->
-		<drawable id="alarmView" class="AlarmView">
-			<param name="x">167</param>
-			<param name="y">32</param>
-		</drawable>
-		<drawable id="bluetoothView" class="BluetoothView">
-			<param name="x">207</param>
-			<param name="y">32</param>
-		</drawable>
-		<drawable id="notificationView" class="NotificationView">
-			<param name="x">247</param>
-			<param name="y">37</param>
-		</drawable>
-
-		<!-- battery -->
+		<!-- battery: arc gauge on the top edge, percentage below it -->
 		<drawable id="batteryView" class="BatteryView">
+			<param name="batteryArc">true</param>
+			<param name="arcInset">12</param>
+			<param name="arcWidth">8</param>
 			<param name="batteryBarHorizontal">true</param>
 			<param name="batteryBarSize">.3</param>
 			<param name="batteryBarThickness">.006</param>
 			<param name="batteryBarLocX">.5</param>
-			<param name="batteryBarLocY">.155</param>
+			<param name="batteryBarLocY">.062</param>
 			<param name="batteryPercentageLocX">0</param>
-			<param name="batteryPercentageLocY">.008</param>
+			<param name="batteryPercentageLocY">0</param>
+		</drawable>
+
+		<!-- status icons: alarm, Bluetooth, notifications (only active ones, centered) -->
+		<drawable id="statusRow" class="StatusRowView">
+			<param name="x">227</param>
+			<param name="y">66</param>
 		</drawable>
 
 		<!-- sunrise / sunset -->
 		<drawable id="sunView" class="SunView">
 			<param name="textX">227</param>
-			<param name="textY">106</param>
+			<param name="textY">100</param>
 			<param name="iconX">218</param>
-			<param name="iconY">112</param>
+			<param name="iconY">113</param>
 		</drawable>
 
 		<!-- time and date -->
@@ -49,32 +61,21 @@
 			<param name="showDate">false</param>
 			<param name="timeFont">Graphics.FONT_NUMBER_MEDIUM</param>
 			<param name="x">.5</param>
-			<param name="y">.275</param>
+			<param name="y">.26</param>
 		</drawable>
 		<drawable id="dateView" class="TimeView">
 			<param name="showTime">false</param>
 			<param name="showDate">true</param>
 			<param name="x">.5</param>
-			<param name="y">.53</param>
+			<param name="y">.513</param>
 		</drawable>
 
-		<!-- steps | distance -->
-		<drawable id="activityView" class="ActivityView">
-			<param name="x">227</param>
-			<param name="y">284</param>
-			<param name="centered">true</param>
-			<param name="stepsXOffset">-80</param>
-			<param name="stepsYOffset">0</param>
-			<param name="showDistance">true</param>
-			<param name="distanceXOffset">80</param>
-			<param name="distanceYOffset">0</param>
-		</drawable>
-
-		<!-- floors | temperature | heart rate -->
+		<!-- info panel: steps | distance, floors | temperature | heart rate -->
 		<drawable id="sensorView" class="SensorView">
 			<param name="x">227</param>
-			<param name="y">324</param>
-			<param name="spacing">80</param>
+			<param name="y">286</param>
+			<param name="w">300</param>
+			<param name="rowHeight">36</param>
 		</drawable>
 	</layout>
 </resources>

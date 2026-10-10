@@ -50,27 +50,29 @@ class ActivityView extends Ui.Drawable
         if (showDistance && activityInfo.distance != null)
         {
             dc.drawText(locX + distanceXOffset, locY + distanceYOffset, Gfx.FONT_TINY,
-                        formatDistance(activityInfo.distance, deviceSettings.distanceUnits), justify);
+                        $.formatDistance(activityInfo.distance, deviceSettings.distanceUnits), justify);
         }
     }
+}
 
-    //! distance is in centimeters
-    function formatDistance(distance, units)
+//! distance is in centimeters
+function formatDistance(distance, units)
+{
+    if (units == Sys.UNIT_METRIC)
     {
-        if (units == Sys.UNIT_METRIC)
+        if (distance >= 100000)
         {
-            if (distance >= 100000)
-            {
-                return (distance * 0.00001).format("%.2f") + "km";
-            }
-            return (distance * 0.01).toLong() + "m";
+            var km = distance * 0.00001;
+            return km.format(km >= 100 ? "%.1f" : "%.2f") + "km";
         }
-
-        var feet = distance * 0.0328084;
-        if (feet >= 5280)
-        {
-            return (feet / 5280.0).format("%.2f") + "mi";
-        }
-        return feet.toLong() + "ft";
+        return (distance * 0.01).toLong() + "m";
     }
+
+    var feet = distance * 0.0328084;
+    if (feet >= 5280)
+    {
+        var miles = feet / 5280.0;
+        return miles.format(miles >= 100 ? "%.1f" : "%.2f") + "mi";
+    }
+    return feet.toLong() + "ft";
 }

@@ -9,6 +9,10 @@ class BatteryView extends Ui.Drawable
     var showBatteryBar = true;
     var showBatteryPercentage = true;
     var batteryBarHorizontal = true;
+    // arc gauge along the top edge instead of a straight bar
+    var batteryArc = false;
+    var arcInset = 12;
+    var arcWidth = 8;
 
     // layout values between -1 and 1 are a fraction of the screen, anything else is pixels
     var batteryBarSize;
@@ -25,6 +29,15 @@ class BatteryView extends Ui.Drawable
         Drawable.initialize(params);
 
         batteryBarHorizontal = params.get(:batteryBarHorizontal);
+        batteryArc = params.get(:batteryArc) == true;
+        if (params.get(:arcInset) != null)
+        {
+            arcInset = params.get(:arcInset);
+        }
+        if (params.get(:arcWidth) != null)
+        {
+            arcWidth = params.get(:arcWidth);
+        }
         batteryBarSize = params.get(:batteryBarSize);
         batteryBarThickness = params.get(:batteryBarThickness);
         batteryBarLocX = params.get(:batteryBarLocX);
@@ -46,7 +59,11 @@ class BatteryView extends Ui.Drawable
     {
         var battery = Sys.getSystemStats().battery;
 
-        if (showBatteryBar)
+        if (showBatteryBar && batteryArc)
+        {
+            drawBatteryArc(dc, battery);
+        }
+        else if (showBatteryBar)
         {
             dc.setColor(Gfx.COLOR_DK_GRAY, Gfx.COLOR_TRANSPARENT);
             drawBatteryBar(dc, 100);
@@ -62,6 +79,27 @@ class BatteryView extends Ui.Drawable
                         toPixels(batteryBarLocY, height) + toPixels(batteryPercentageLocY, height),
                         Gfx.FONT_TINY, Math.round(battery).format("%d") + "%", Gfx.TEXT_JUSTIFY_CENTER);
         }
+    }
+
+    //! Gauge on the top of the dial, filling from left (140 deg) to right (40 deg)
+    function drawBatteryArc(dc, battery)
+    {
+        var centerX = dc.getWidth() / 2;
+        var centerY = dc.getHeight() / 2;
+        var radius = centerX - arcInset;
+        var start = 140;
+        var end = 40;
+
+        dc.setPenWidth(arcWidth);
+        dc.setColor(0x333333, Gfx.COLOR_TRANSPARENT);
+        dc.drawArc(centerX, centerY, radius, Gfx.ARC_CLOCKWISE, start, end);
+        var fillEnd = start - ((start - end) * battery / 100).toNumber();
+        if (fillEnd < start)
+        {
+            dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+            dc.drawArc(centerX, centerY, radius, Gfx.ARC_CLOCKWISE, start, fillEnd);
+        }
+        dc.setPenWidth(1);
     }
 
     function drawBatteryBar(dc, battery)
