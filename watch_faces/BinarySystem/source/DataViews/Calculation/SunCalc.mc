@@ -57,7 +57,7 @@ class SunCalc {
     }
 
     function fromJulian(j) {
-        return new Time.Moment((j + 0.5 - J1970) * DAYS);
+        return new Time.Moment(((j + 0.5 - J1970) * DAYS).toNumber());
     }
 
     function round(a) {
@@ -70,6 +70,10 @@ class SunCalc {
 
     // lat and lng in radians
     function calculate(moment, lat, lng, what) {
+        // Julian dates (~2.46 million) need Double: a 32-bit Float only
+        // resolves them to a quarter of a day
+        lat = lat.toDouble();
+        lng = lng.toDouble();
         var d = moment.value().toDouble() / DAYS - 0.5 + J1970 - J2000;
         if (lastD != d || lastLng != lng) {
             n = round(d - J0 + lng / PI2);

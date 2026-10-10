@@ -5,39 +5,30 @@ using Toybox.WatchUi as Ui;
 
 class NotificationView extends Ui.Drawable
 {
-	var fontSize = Gfx.FONT_TINY;
+	var color;
+
 	function initialize(params)
 	{
 		Drawable.initialize(params);
 		locX = params.get(:x);
 		locY = params.get(:y);
-		fontSize = params.get(:fontSize);
-
+		color = App.getApp().getProperty("ForegroundColor");
 	}
 
 	function draw(dc)
 	{
-		var dot_color = App.getApp().getProperty("ForegroundColor");
-        var bg_transp = Gfx.COLOR_TRANSPARENT;
-        var color_bg = Gfx.COLOR_BLACK;
-	    var fg_color = Gfx.COLOR_WHITE;
-
-
-	    var deviceSettings = Sys.getDeviceSettings();
-        var notificationCount = deviceSettings.notificationCount;
-
+		var notificationCount = Sys.getDeviceSettings().notificationCount;
 		if (notificationCount > 0)
 		{
-            dc.setColor(fg_color, bg_transp);
-            dc.drawRoundedRectangle(locX, locY, 40, 18, 4);
-            dc.drawRectangle(locX+2, locY+4, 10, 1);
-            dc.drawRectangle(locX+2, locY+8, 16, 1);
-            dc.drawRectangle(locX+2, locY+12, 10, 1);
+			// envelope with text lines
+			dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+			dc.drawRoundedRectangle(locX, locY, 40, 18, 4);
+			dc.drawRectangle(locX+2, locY+4, 10, 1);
+			dc.drawRectangle(locX+2, locY+8, 16, 1);
+			dc.drawRectangle(locX+2, locY+12, 10, 1);
 
-            //draw notification count
-            var notificationCountStr = notificationCount.toString();
-            dc.setColor(dot_color, bg_transp);
-            dc.drawText(locX+36, locY-1, fontSize, notificationCountStr, Gfx.TEXT_JUSTIFY_RIGHT);
+			dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+			dc.drawText(locX+36, locY-1, Gfx.FONT_TINY, notificationCount.toString(), Gfx.TEXT_JUSTIFY_RIGHT);
 		}
 	}
 }

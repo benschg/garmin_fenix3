@@ -1,27 +1,42 @@
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-class BluetoothView extends Ui.Drawable
+//! Draws a status icon at (x, y) while isActive() returns true
+class StatusIconView extends Ui.Drawable
 {
-	var image = null;
-	function initialize(params)
+	var image;
+
+	function initialize(params, resource)
 	{
 		Drawable.initialize(params);
 		locX = params.get(:x);
 		locY = params.get(:y);
-		
-		image = Ui.loadResource( Rez.Drawables.bluetooth_icon );
+		image = Ui.loadResource(resource);
+	}
+
+	function isActive(deviceSettings)
+	{
+		return false;
 	}
 
 	function draw(dc)
 	{
-		var devSettings = Sys.getDeviceSettings();
-		var phoneConnected = devSettings.phoneConnected;
-		
-		if (phoneConnected)
+		if (isActive(Sys.getDeviceSettings()))
 		{
 			dc.drawBitmap(locX, locY, image);
 		}
-	
+	}
+}
+
+class BluetoothView extends StatusIconView
+{
+	function initialize(params)
+	{
+		StatusIconView.initialize(params, Rez.Drawables.bluetooth_icon);
+	}
+
+	function isActive(deviceSettings)
+	{
+		return deviceSettings.phoneConnected;
 	}
 }

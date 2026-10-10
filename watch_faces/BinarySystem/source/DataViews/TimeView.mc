@@ -9,45 +9,45 @@ class TimeView extends Ui.Drawable
 {
     var showTime = true;
     var showDate = true;
+    var timeFont = Gfx.FONT_LARGE;
+    var color;
 
     function initialize(params)
     {
         Ui.Drawable.initialize(params);
-
-        var x = params.get(:x);
-        var y = params.get(:y);
+        // x and y are fractions of the screen size
+        locX = params.get(:x);
+        locY = params.get(:y);
         showTime = params.get(:showTime);
         showDate = params.get(:showDate);
-        Ui.Drawable.setLocation(x, y);
+        if (params.get(:timeFont) != null)
+        {
+            timeFont = params.get(:timeFont);
+        }
+        color = App.getApp().getProperty("ForegroundColor");
     }
 
     function draw(dc)
     {
-        //var showTime= App.getApp().getProperty("showTime");
-        //var showDate= App.getApp().getProperty("showDate");
-        var now = Time.now();
-        var time = Gregorian.info(now, Time.FORMAT_LONG);
-
-        var bg_color = Gfx.COLOR_BLACK;
-        var fg_color = Gfx.COLOR_WHITE;
-        var bg_transp = Gfx.COLOR_TRANSPARENT;
-        var dot_color = App.getApp().getProperty("ForegroundColor");
-
+        var time = Gregorian.info(Time.now(), Time.FORMAT_LONG);
+        var centerX = locX * dc.getWidth();
+        var centerY = locY * dc.getHeight();
 
         if (showTime)
         {
+            var lineHeight = showDate ? dc.getHeight() / 7 : 0;
             var timeStr = Lang.format("$1$:$2$", [time.hour, time.min.format("%02d")]);
-            dc.setColor(fg_color, bg_transp);
-            dc.drawText(locX, locY, Gfx.FONT_LARGE, timeStr, Gfx.TEXT_JUSTIFY_CENTER);
+            // soft drop shadow, then the time
+            dc.setColor(0x303030, Gfx.COLOR_TRANSPARENT);
+            dc.drawText(centerX + 2, centerY - lineHeight + 3, timeFont, timeStr, Gfx.TEXT_JUSTIFY_CENTER);
+            dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+            dc.drawText(centerX, centerY - lineHeight, timeFont, timeStr, Gfx.TEXT_JUSTIFY_CENTER);
         }
-        //===============================
-        //!draw date
-        //===============================
         if (showDate)
         {
-            var dateStr = Lang.format("$1$ $2$ $3$", [time.day_of_week, time.month, time.day]);
-            dc.setColor(dot_color, bg_transp);
-            dc.drawText(locX, locY + (showTime ? 30 : 0), Gfx.FONT_TINY, dateStr, Gfx.TEXT_JUSTIFY_CENTER);
+            dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+            dc.drawText(centerX, centerY, Gfx.FONT_TINY,
+                        Lang.format("$1$ $2$ $3$", [time.day_of_week, time.month, time.day]), Gfx.TEXT_JUSTIFY_CENTER);
         }
     }
 }

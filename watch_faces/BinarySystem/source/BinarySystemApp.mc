@@ -11,6 +11,14 @@ class BinarySystemApp extends App.AppBase {
 
     //! onStart() is called on application start up
     function onStart(state) {
+        // Earlier builds stored a Berlin test location. Remove it so the
+        // real location is used.
+        if (App.Storage.getValue("lastStoredLatitude") == 0.9163
+            && App.Storage.getValue("lastStoredLongitude") == 0.2341) {
+            App.Storage.deleteValue("lastStoredLatitude");
+            App.Storage.deleteValue("lastStoredLongitude");
+            App.Storage.deleteValue("hasStoredLocationData");
+        }
     }
 
     //! onStop() is called when your application is exiting
@@ -24,8 +32,8 @@ class BinarySystemApp extends App.AppBase {
 
     //! New app settings have been received so trigger a UI update
     function onSettingsChanged() {
-        Ui.requestUpdate();
         mView.onSettingsChanged();
+        Ui.requestUpdate();
     }
 
 }

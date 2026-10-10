@@ -1,2 +1,13 @@
 project.manifest = manifest.xml
 
+# Fenix 8 47mm and Pro 47mm: 454x454
+fenix847mm.resourcePath = $(base.resourcePath);resources-fenix8-454
+fenix8pro47mm.resourcePath = $(base.resourcePath);resources-fenix8-454
+
+# Fenix 8 43mm: 416x416
+fenix843mm.resourcePath = $(base.resourcePath);resources-fenix8-416
+
+# Fenix 8 Solar 51mm: 280x280
+fenix8solar51mm.resourcePath = $(base.resourcePath);resources-fenix8-280
+
+# Fenix 8 Solar 47mm: 260x260 (same as Fenix 6, uses base resources)
