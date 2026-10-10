@@ -1,10 +1,9 @@
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
-using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
-//! Alarm, Bluetooth and notifications in one row. Only active items are
-//! shown and the row is centered on x as a group.
+//! Alarm, Bluetooth and notifications in one row, as icons only. Only
+//! active items are shown and the row is centered on x as a group.
 class StatusRowView extends Ui.Drawable
 {
 	const GAP = 12;
@@ -14,7 +13,6 @@ class StatusRowView extends Ui.Drawable
 	var alarmImage;
 	var bluetoothImage;
 	var rowHeight;
-	var color;
 
 	function initialize(params)
 	{
@@ -24,11 +22,10 @@ class StatusRowView extends Ui.Drawable
 		alarmImage = Ui.loadResource(Rez.Drawables.alarm_icon);
 		bluetoothImage = Ui.loadResource(Rez.Drawables.bluetooth_icon);
 		rowHeight = bluetoothImage.getHeight();
-		color = App.getApp().getProperty("ForegroundColor");
 	}
 
-	//! envelope with the count next to it, left edge at x
-	function drawNotifications(dc, x, centerY, countText)
+	//! envelope icon, left edge at x
+	function drawNotifications(dc, x, centerY)
 	{
 		var top = centerY - ENVELOPE_HEIGHT / 2;
 		var right = x + ENVELOPE_WIDTH - 1;
@@ -39,10 +36,6 @@ class StatusRowView extends Ui.Drawable
 		dc.drawLine(x + 1, top + 1, x + ENVELOPE_WIDTH / 2, top + ENVELOPE_HEIGHT / 2);
 		dc.drawLine(x + ENVELOPE_WIDTH / 2, top + ENVELOPE_HEIGHT / 2, right, top + 1);
 		dc.setPenWidth(1);
-
-		dc.setColor(color, Gfx.COLOR_TRANSPARENT);
-		dc.drawText(x + ENVELOPE_WIDTH + 4, centerY, Gfx.FONT_XTINY, countText,
-		            Gfx.TEXT_JUSTIFY_LEFT | Gfx.TEXT_JUSTIFY_VCENTER);
 	}
 
 	function draw(dc)
@@ -50,7 +43,7 @@ class StatusRowView extends Ui.Drawable
 		var settings = Sys.getDeviceSettings();
 		var showAlarm = settings.alarmCount > 0;
 		var showBluetooth = settings.phoneConnected;
-		var countText = settings.notificationCount > 0 ? settings.notificationCount.toString() : null;
+		var showNotifications = settings.notificationCount > 0;
 
 		// total width of the visible items, to center them
 		var width = 0;
@@ -65,9 +58,9 @@ class StatusRowView extends Ui.Drawable
 			width += bluetoothImage.getWidth();
 			items++;
 		}
-		if (countText != null)
+		if (showNotifications)
 		{
-			width += ENVELOPE_WIDTH + 4 + dc.getTextWidthInPixels(countText, Gfx.FONT_XTINY);
+			width += ENVELOPE_WIDTH;
 			items++;
 		}
 		if (items == 0)
@@ -88,9 +81,9 @@ class StatusRowView extends Ui.Drawable
 			dc.drawBitmap(x, centerY - bluetoothImage.getHeight() / 2, bluetoothImage);
 			x += bluetoothImage.getWidth() + GAP;
 		}
-		if (countText != null)
+		if (showNotifications)
 		{
-			drawNotifications(dc, x, centerY, countText);
+			drawNotifications(dc, x, centerY);
 		}
 	}
 }

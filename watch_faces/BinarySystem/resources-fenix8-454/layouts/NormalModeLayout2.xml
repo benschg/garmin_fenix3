@@ -6,17 +6,19 @@
 		<!-- shaded areas -->
 		<drawable id="sunPanel" class="PanelView">
 			<param name="x">102</param>
-			<param name="y">101</param>
+			<param name="y">97</param>
 			<param name="w">250</param>
 			<param name="h">40</param>
 			<param name="radius">20</param>
 		</drawable>
+		<!-- trapezoid following the bowl between the date and the seconds dots -->
 		<drawable id="activityPanel" class="PanelView">
-			<param name="x">70</param>
-			<param name="y">282</param>
-			<param name="w">314</param>
-			<param name="h">80</param>
-			<param name="radius">20</param>
+			<param name="x">57</param>
+			<param name="y">283</param>
+			<param name="w">340</param>
+			<param name="h">106</param>
+			<param name="bottomWidth">170</param>
+			<param name="radius">18</param>
 		</drawable>
 
 		<drawable id="binaryView" class="BinaryView">
@@ -24,6 +26,7 @@
 			<param name="y">167</param>
 			<param name="borderDistance">37</param>
 			<param name="type">Circular</param>
+			<param name="arcSegments">true</param>
 			<param name="showSeconds">true</param>
 		</drawable>
 
@@ -36,7 +39,8 @@
 			<param name="batteryBarSize">.3</param>
 			<param name="batteryBarThickness">.006</param>
 			<param name="batteryBarLocX">.5</param>
-			<param name="batteryBarLocY">.062</param>
+			<param name="batteryBarLocY">.0507</param>
+			<param name="percentFont">Graphics.FONT_XTINY</param>
 			<param name="batteryPercentageLocX">0</param>
 			<param name="batteryPercentageLocY">0</param>
 		</drawable>
@@ -44,15 +48,15 @@
 		<!-- status icons: alarm, Bluetooth, notifications (only active ones, centered) -->
 		<drawable id="statusRow" class="StatusRowView">
 			<param name="x">227</param>
-			<param name="y">66</param>
+			<param name="y">60</param>
 		</drawable>
 
 		<!-- sunrise / sunset -->
 		<drawable id="sunView" class="SunView">
 			<param name="textX">227</param>
-			<param name="textY">100</param>
+			<param name="textY">96</param>
 			<param name="iconX">218</param>
-			<param name="iconY">113</param>
+			<param name="iconY">109</param>
 		</drawable>
 
 		<!-- time and date -->
@@ -61,21 +65,23 @@
 			<param name="showDate">false</param>
 			<param name="timeFont">Graphics.FONT_NUMBER_MEDIUM</param>
 			<param name="x">.5</param>
-			<param name="y">.26</param>
+			<param name="y">.2577</param>
 		</drawable>
 		<drawable id="dateView" class="TimeView">
 			<param name="showTime">false</param>
 			<param name="showDate">true</param>
 			<param name="x">.5</param>
-			<param name="y">.513</param>
+			<param name="y">.5176</param>
 		</drawable>
 
-		<!-- info panel: steps | distance, floors | temperature | heart rate -->
+		<!-- info panel: steps | distance, weather | sensor temperature, floors | heart rate -->
 		<drawable id="sensorView" class="SensorView">
 			<param name="x">227</param>
-			<param name="y">286</param>
-			<param name="w">300</param>
-			<param name="rowHeight">36</param>
+			<param name="y">285</param>
+			<param name="w">270</param>
+			<param name="rowHeight">34</param>
+			<param name="innerOffset">62</param>
+			<param name="tipOffset">50</param>
 		</drawable>
 	</layout>
 </resources>

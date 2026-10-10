@@ -23,6 +23,7 @@ class BatteryView extends Ui.Drawable
     var batteryPercentageLocY;
 
     var color;
+    var percentFont = Gfx.FONT_TINY;
 
     function initialize(params)
     {
@@ -44,6 +45,11 @@ class BatteryView extends Ui.Drawable
         batteryBarLocY = params.get(:batteryBarLocY);
         batteryPercentageLocX = params.get(:batteryPercentageLocX);
         batteryPercentageLocY = params.get(:batteryPercentageLocY);
+
+        if (params.get(:percentFont) != null)
+        {
+            percentFont = params.get(:percentFont);
+        }
 
         showBatteryBar = App.getApp().getProperty("showBatteryBar");
         showBatteryPercentage = App.getApp().getProperty("showBatteryPercentage");
@@ -77,7 +83,7 @@ class BatteryView extends Ui.Drawable
             dc.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
             dc.drawText(toPixels(batteryBarLocX, width) + toPixels(batteryPercentageLocX, width),
                         toPixels(batteryBarLocY, height) + toPixels(batteryPercentageLocY, height),
-                        Gfx.FONT_TINY, Math.round(battery).format("%d") + "%", Gfx.TEXT_JUSTIFY_CENTER);
+                        percentFont, Math.round(battery).format("%d") + "%", Gfx.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -90,16 +96,33 @@ class BatteryView extends Ui.Drawable
         var start = 140;
         var end = 40;
 
+        // track with rounded ends
         dc.setPenWidth(arcWidth);
-        dc.setColor(0x333333, Gfx.COLOR_TRANSPARENT);
+        dc.setColor(0x262626, Gfx.COLOR_TRANSPARENT);
         dc.drawArc(centerX, centerY, radius, Gfx.ARC_CLOCKWISE, start, end);
+        drawArcCap(dc, centerX, centerY, radius, start);
+        drawArcCap(dc, centerX, centerY, radius, end);
+
+        // fill with rounded ends and a lighter inner line
         var fillEnd = start - ((start - end) * battery / 100).toNumber();
         if (fillEnd < start)
         {
             dc.setColor(color, Gfx.COLOR_TRANSPARENT);
             dc.drawArc(centerX, centerY, radius, Gfx.ARC_CLOCKWISE, start, fillEnd);
+            drawArcCap(dc, centerX, centerY, radius, start);
+            drawArcCap(dc, centerX, centerY, radius, fillEnd);
+            dc.setPenWidth(2);
+            dc.setColor($.blendColor(color, 0xFFFFFF, 0.4), Gfx.COLOR_TRANSPARENT);
+            dc.drawArc(centerX, centerY, radius + arcWidth / 4, Gfx.ARC_CLOCKWISE, start, fillEnd);
         }
         dc.setPenWidth(1);
+    }
+
+    //! round end of the arc at the given angle (degrees, counter-clockwise from 3 o'clock)
+    function drawArcCap(dc, centerX, centerY, radius, degrees)
+    {
+        var angle = Math.toRadians(degrees);
+        dc.fillCircle(centerX + radius * Math.cos(angle), centerY - radius * Math.sin(angle), arcWidth / 2);
     }
 
     function drawBatteryBar(dc, battery)

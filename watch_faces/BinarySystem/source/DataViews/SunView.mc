@@ -25,6 +25,9 @@ class SunView extends Ui.Drawable
     // sunrise/sunset only changes once a day, so the text is cached
     var sunText = null;
     var sunTextDay = null;
+    // when the location was last checked (seconds): every minute until one
+    // is found, then once an hour
+    var locationCheckTime = null;
 
     function initialize(params)
     {
@@ -39,27 +42,54 @@ class SunView extends Ui.Drawable
         if (showSun)
         {
             gpsImage = Ui.loadResource(Rez.Drawables.nogps_icon);
-            updateLocation();
         }
     }
 
+    //! Current position in radians as [lat, lng], or null if unknown:
+    //! the watch's last GPS fix, else the location of the phone's weather data
+    function readLocation()
+    {
+        var location = Activity.getActivityInfo().currentLocation;
+        if (location == null && Toybox has :Weather)
+        {
+            var conditions = Toybox.Weather.getCurrentConditions();
+            if (conditions != null && conditions has :observationLocationPosition)
+            {
+                location = conditions.observationLocationPosition;
+            }
+        }
+        return location == null ? null : location.toRadians();
+    }
+
+    //! Picks up the current location, falling back to the last stored one.
+    //! Returns true if the location changed.
     function updateLocation()
     {
-        var curLoc = Activity.getActivityInfo().currentLocation;
-        if (curLoc != null)
+        var latlon = readLocation();
+        if (latlon == null)
         {
-            var latlon = curLoc.toRadians();
-            latitude = latlon[0];
-            longitude = latlon[1];
-            App.Storage.setValue("lastStoredLatitude", latitude);
-            App.Storage.setValue("lastStoredLongitude", longitude);
-            App.Storage.setValue("hasStoredLocationData", true);
+            if (latitude == null && App.Storage.getValue("hasStoredLocationData") == true)
+            {
+                latitude = App.Storage.getValue("lastStoredLatitude");
+                longitude = App.Storage.getValue("lastStoredLongitude");
+                return true;
+            }
+            return false;
         }
-        else if (App.Storage.getValue("hasStoredLocationData") == true)
+
+        // ignore tiny changes (0.001 rad is about 6 km) to avoid storage writes
+        if (latitude != null
+            && (latlon[0] - latitude).abs() < 0.001
+            && (latlon[1] - longitude).abs() < 0.001)
         {
-            latitude = App.Storage.getValue("lastStoredLatitude");
-            longitude = App.Storage.getValue("lastStoredLongitude");
+            return false;
         }
+        latitude = latlon[0];
+        longitude = latlon[1];
+        App.Storage.setValue("lastStoredLatitude", latitude);
+        App.Storage.setValue("lastStoredLongitude", longitude);
+        App.Storage.setValue("hasStoredLocationData", true);
+        return true;
     }
 
     function formatTime(moment)
@@ -79,10 +109,16 @@ class SunView extends Ui.Drawable
             return;
         }
 
-        // keep trying to acquire a location until one is found
-        if (latitude == null)
+        var now = Time.now();
+        var nowSeconds = now.value();
+        var interval = latitude == null ? 60 : 3600;
+        if (locationCheckTime == null || nowSeconds - locationCheckTime >= interval)
         {
-            updateLocation();
+            locationCheckTime = nowSeconds;
+            if (updateLocation())
+            {
+                sunText = null;
+            }
         }
 
         dc.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
@@ -93,14 +129,14 @@ class SunView extends Ui.Drawable
             return;
         }
 
-        var now = Time.now();
         var today = Gregorian.info(now, Time.FORMAT_SHORT).day;
         if (sunText == null || sunTextDay != today)
         {
             var sc = new SunCalc();
             sunText = formatTime(sc.calculate(now, latitude, longitude, SUNRISE)) + " - "
                     + formatTime(sc.calculate(now, latitude, longitude, SUNSET));
-            sunTextDay = today;        }
+            sunTextDay = today;
+        }
         dc.drawText(textX, textY, Gfx.FONT_TINY, sunText, Gfx.TEXT_JUSTIFY_CENTER);
     }
 }

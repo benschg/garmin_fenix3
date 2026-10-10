@@ -36,9 +36,12 @@ class TimeView extends Ui.Drawable
         if (showTime)
         {
             var lineHeight = showDate ? dc.getHeight() / 7 : 0;
+            var timeStr = Lang.format("$1$:$2$", [time.hour, time.min.format("%02d")]);
+            // soft drop shadow, then the time
+            dc.setColor(0x303030, Gfx.COLOR_TRANSPARENT);
+            dc.drawText(centerX + 2, centerY - lineHeight + 3, timeFont, timeStr, Gfx.TEXT_JUSTIFY_CENTER);
             dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-            dc.drawText(centerX, centerY - lineHeight, timeFont,
-                        Lang.format("$1$:$2$", [time.hour, time.min.format("%02d")]), Gfx.TEXT_JUSTIFY_CENTER);
+            dc.drawText(centerX, centerY - lineHeight, timeFont, timeStr, Gfx.TEXT_JUSTIFY_CENTER);
         }
         if (showDate)
         {

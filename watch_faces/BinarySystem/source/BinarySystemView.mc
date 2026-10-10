@@ -9,6 +9,8 @@ class BinarySystemView extends Ui.WatchFace {
 
     var isDirty = false;
     var backgroundColor = Gfx.COLOR_BLACK;
+    // the drawables of the current layout, drawn by onUpdate in order
+    var drawables = [];
 
     function initialize() {
         WatchFace.initialize();
@@ -19,27 +21,34 @@ class BinarySystemView extends Ui.WatchFace {
     function onLayout(dc) {
         var layoutMode = App.getApp().getProperty("LayoutType");
         if (layoutMode == 0) {
-            setLayout(Rez.Layouts.GeekModeLayout(dc));
+            drawables = Rez.Layouts.GeekModeLayout(dc);
         } else if (layoutMode == 1) {
-            setLayout(Rez.Layouts.VerticalLayout(dc));
+            drawables = Rez.Layouts.VerticalLayout(dc);
         } else if (layoutMode == 2) {
-            setLayout(Rez.Layouts.HorizontalLayout(dc));
+            drawables = Rez.Layouts.HorizontalLayout(dc);
         } else if (layoutMode == 3) {
-            setLayout(Rez.Layouts.NormalModeLayout(dc));
+            drawables = Rez.Layouts.NormalModeLayout(dc);
         } else {
-            setLayout(Rez.Layouts.NormalModeLayout2(dc));
+            drawables = Rez.Layouts.NormalModeLayout2(dc);
         }
         backgroundColor = App.getApp().getProperty("BackgroundColor");
     }
 
+    //! Drawn by hand instead of View.onUpdate(), which clears the screen
+    //! to black and would hide the background color.
     function onUpdate(dc) {
         if (isDirty) {
             onLayout(dc);
             isDirty = false;
         }
+        if (dc has :setAntiAlias) {
+            dc.setAntiAlias(true);
+        }
         dc.setColor(Gfx.COLOR_TRANSPARENT, backgroundColor);
         dc.clear();
-        View.onUpdate(dc);
+        for (var i = 0; i < drawables.size(); i++) {
+            drawables[i].draw(dc);
+        }
     }
 
     //! The user has just looked at their watch.

@@ -5,13 +5,14 @@ using Toybox.ActivityMonitor as ActMon;
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
-//! Info panel with an icon per value, in two rows centered on x:
-//!   steps | distance
-//!   floors | temperature | heart rate
-//! Each value sits in a fixed-width cell sized for its longest value in
-//! FONT_XTINY on the 454px screen: steps "88888" and distance "12.34km"
-//! need up to 141px of 150, temperature "104°F" 102px of 110, floors and
-//! heart rate "888" about 72px of 95.
+//! Info panel with an icon per value, as a pyramid narrowing toward the
+//! bottom of the dial, centered on x:
+//!       steps | distance          row width w: cells of 4/9 w and 5/9 w
+//!    weather | watch sensor       temperatures, cells at +-innerOffset
+//!     floors | heart rate         cells at +-tipOffset
+//! Widest values in FONT_XTINY on the 454px screen (icon included):
+//! steps "88888" 107px, distance "12.34km" 141px, temperature "104°F"
+//! 102px, floors/heart rate "888" 72px.
 class SensorView extends Ui.Drawable
 {
     const ICON_SIZE = 16;
@@ -19,12 +20,15 @@ class SensorView extends Ui.Drawable
 
     var rowWidth = 300;
     var rowHeight = 40;
+    var innerOffset = 62;
+    var tipOffset = 50;
     var showDistance = true;
     var color;
     var panelColor = 0x1E1E1E;
 
-    // temperature only changes slowly, so it is refreshed once a minute
-    var temperatureText = "--";
+    // temperatures only change slowly, so they are refreshed once a minute
+    var weatherText = "--";
+    var sensorText = "--";
     var temperatureMinute = -1;
 
     function initialize(params)
@@ -34,6 +38,14 @@ class SensorView extends Ui.Drawable
         locY = params.get(:y);
         rowWidth = params.get(:w);
         rowHeight = params.get(:rowHeight);
+        if (params.get(:innerOffset) != null)
+        {
+            innerOffset = params.get(:innerOffset);
+        }
+        if (params.get(:tipOffset) != null)
+        {
+            tipOffset = params.get(:tipOffset);
+        }
         if (params.get(:panelColor) != null)
         {
             panelColor = params.get(:panelColor);
@@ -69,17 +81,23 @@ class SensorView extends Ui.Drawable
         return heartRate == null ? "--" : heartRate.toString();
     }
 
-    //! Celsius from the phone's weather, or else the watch's own sensor
-    function getTemperature()
+    //! Outside air temperature in Celsius from the phone's weather
+    function getWeatherTemperature()
     {
         if (Toybox has :Weather)
         {
             var conditions = Toybox.Weather.getCurrentConditions();
-            if (conditions != null && conditions.temperature != null)
+            if (conditions != null)
             {
                 return conditions.temperature;
             }
         }
+        return null;
+    }
+
+    //! Celsius from the watch's own sensor (warmed by the wrist)
+    function getSensorTemperature()
+    {
         if (Toybox has :SensorHistory && Toybox.SensorHistory has :getTemperatureHistory)
         {
             var sample = Toybox.SensorHistory.getTemperatureHistory({ :period => 1 }).next();
@@ -92,7 +110,20 @@ class SensorView extends Ui.Drawable
     }
 
     //! Uses the watch's unit setting: metric shows Celsius, statute Fahrenheit
-    function updateTemperature()
+    function formatTemperature(celsius, units)
+    {
+        if (celsius == null)
+        {
+            return "--";
+        }
+        if (units == Sys.UNIT_STATUTE)
+        {
+            return (celsius * 9 / 5.0 + 32).format("%.0f") + "°F";
+        }
+        return celsius.toFloat().format("%.0f") + "°C";
+    }
+
+    function updateTemperatures()
     {
         var minute = Sys.getClockTime().min;
         if (minute == temperatureMinute)
@@ -101,19 +132,9 @@ class SensorView extends Ui.Drawable
         }
         temperatureMinute = minute;
 
-        var celsius = getTemperature();
-        if (celsius == null)
-        {
-            temperatureText = "--";
-        }
-        else if (Sys.getDeviceSettings().temperatureUnits == Sys.UNIT_STATUTE)
-        {
-            temperatureText = (celsius * 9 / 5.0 + 32).format("%d") + "°F";
-        }
-        else
-        {
-            temperatureText = celsius.format("%d") + "°C";
-        }
+        var units = Sys.getDeviceSettings().temperatureUnits;
+        weatherText = formatTemperature(getWeatherTemperature(), units);
+        sensorText = formatTemperature(getSensorTemperature(), units);
     }
 
     //===============================
@@ -146,6 +167,14 @@ class SensorView extends Ui.Drawable
             dc.fillRectangle(x - 3, y - 2, 11, 5);
             dc.fillRectangle(x + 2, y - 7, 6, 5);
         }
+        else if (icon == :weather)
+        {
+            // cloud
+            dc.fillCircle(x - 4, y + 1, 4);
+            dc.fillCircle(x + 1, y - 3, 6);
+            dc.fillCircle(x + 5, y + 1, 4);
+            dc.fillRectangle(x - 4, y + 1, 9, 5);
+        }
         else if (icon == :temperature)
         {
             // thermometer
@@ -177,29 +206,35 @@ class SensorView extends Ui.Drawable
 
     function draw(dc)
     {
-        updateTemperature();
+        updateTemperatures();
         var info = ActMon.getInfo();
         var deviceSettings = Sys.getDeviceSettings();
 
-        // row 1: steps | distance (steps alone if distance is turned off)
+        // row 1 (widest): steps | distance, steps alone if distance is turned off
         var y = locY + rowHeight / 2;
         var steps = info.steps == null ? "0" : info.steps.toString();
         if (showDistance && info.distance != null)
         {
-            drawCell(dc, :steps, steps, locX - rowWidth / 4, y);
-            drawCell(dc, :distance, $.formatDistance(info.distance, deviceSettings.distanceUnits), locX + rowWidth / 4, y);
+            // distance is the longest value, so it gets the wider cell
+            var stepsCell = rowWidth * 4 / 9;
+            var distanceCell = rowWidth - stepsCell;
+            var left = locX - rowWidth / 2;
+            drawCell(dc, :steps, steps, left + stepsCell / 2, y);
+            drawCell(dc, :distance, $.formatDistance(info.distance, deviceSettings.distanceUnits), left + stepsCell + distanceCell / 2, y);
         }
         else
         {
             drawCell(dc, :steps, steps, locX, y);
         }
 
-        // row 2: floors | temperature | heart rate, the middle cell is wider
+        // row 2: weather | watch sensor temperature
         y += rowHeight;
-        var sideCell = rowWidth * 95 / 300;
-        var sideCenter = rowWidth / 2 - sideCell / 2;
-        drawCell(dc, :floors, getFloors(info), locX - sideCenter, y);
-        drawCell(dc, :temperature, temperatureText, locX, y);
-        drawCell(dc, :heartRate, getHeartRate(), locX + sideCenter, y);
+        drawCell(dc, :weather, weatherText, locX - innerOffset, y);
+        drawCell(dc, :temperature, sensorText, locX + innerOffset, y);
+
+        // row 3 (tip): floors | heart rate
+        y += rowHeight;
+        drawCell(dc, :floors, getFloors(info), locX - tipOffset, y);
+        drawCell(dc, :heartRate, getHeartRate(), locX + tipOffset, y);
     }
 }
